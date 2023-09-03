@@ -4,43 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meta Comercial</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        .meta {
-            font-size: 24px;
-            margin-top: 20px;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Meta Comercial</h1>
-        <p class="meta">Meta do segundo semestre de 2023: R$ 350.000,00</p>
-        <p class="meta">Valor atual: <span id="valorAtual">Aguarde a atualização...</span></p>
+    <div style="width: 80%; margin: 0 auto;">
+        <canvas id="metaComercial"></canvas>
     </div>
 
     <script>
-        // Você pode inserir um código JavaScript aqui para atualizar o valor atual diariamente.
-        // Por exemplo, você pode usar uma API para obter o valor atualizado.
-        // Neste exemplo, vou apenas definir um valor de exemplo para ilustração.
+        // Valores da meta e do valor atual
+        const meta = 350000; // Meta do segundo semestre de 2023: R$ 350.000,00
+        const valorAtual = 250000; // Valor atual da sua empresa (atualize conforme necessário)
 
-        // Substitua este valor de exemplo pelo valor atualizado da sua empresa.
-        const valorAtualizado = 250000; // R$ 250.000,00
-
-        // Exibe o valor atualizado na página.
-        const valorAtualElement = document.getElementById('valorAtual');
-        valorAtualElement.textContent = `R$ ${valorAtualizado.toFixed(2)}`;
+        // Configuração do gráfico
+        const ctx = document.getElementById('metaComercial').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Meta', 'Valor Atual'],
+                datasets: [{
+                    label: 'Valores',
+                    data: [meta, valorAtual],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.5)', // Cor da meta
+                        'rgba(255, 99, 132, 0.5)' // Cor do valor atual
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
