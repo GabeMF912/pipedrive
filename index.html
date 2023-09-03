@@ -20,7 +20,10 @@
         const meses = ['Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
         // Dividir a meta anual entre os meses
-        const metaMensal = metaAnual / valorAtualMensal.length;
+        const metaMensalIncremental = metaAnual / valorAtualMensal.length;
+
+        // Calcular valores crescentes da meta mensal
+        const metaMensal = Array(valorAtualMensal.length).fill(0).map((_, index) => metaMensalIncremental * (index + 1));
 
         // Configuração do gráfico
         const ctx = document.getElementById('metaComercial').getContext('2d');
@@ -31,7 +34,7 @@
                 datasets: [
                     {
                         label: 'Meta Mensal',
-                        data: Array(6).fill(metaMensal),
+                        data: metaMensal,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 2,
                         fill: false
