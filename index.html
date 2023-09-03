@@ -12,25 +12,35 @@
     </div>
 
     <script>
-        // Valores da meta e do valor atual
-        const meta = 350000; // Meta do segundo semestre de 2023: R$ 350.000,00
-        const valorAtual = 250000; // Valor atual da sua empresa (atualize conforme necessário)
+        // Valores da meta e do valor atual (mensalmente)
+        const metaAnual = 350000; // Meta anual do segundo semestre de 2023: R$ 350.000,00
+        const valorAtualMensal = [0, 20000, 45000, 80000, 125000, 175000, 250000]; // Valores atuais mensais (atualize conforme necessário)
+
+        // Nomes dos meses
+        const meses = ['Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
         // Configuração do gráfico
         const ctx = document.getElementById('metaComercial').getContext('2d');
         const myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
-                labels: ['Meta', 'Valor Atual'],
-                datasets: [{
-                    label: 'Valores',
-                    data: [meta, valorAtual],
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.5)', // Cor da meta
-                        'rgba(255, 99, 132, 0.5)' // Cor do valor atual
-                    ],
-                    borderWidth: 1
-                }]
+                labels: meses,
+                datasets: [
+                    {
+                        label: 'Meta Anual',
+                        data: Array(7).fill(metaAnual),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    },
+                    {
+                        label: 'Valor Atual',
+                        data: valorAtualMensal,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }
+                ]
             },
             options: {
                 scales: {
