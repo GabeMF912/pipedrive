@@ -1,0 +1,37 @@
+from selenium import webdriver
+
+# Inicialize o navegador (neste exemplo, o Chrome)
+driver = webdriver.Chrome()
+
+# Abra a página de login do Pipedrive
+driver.get('https://app.pipedrive.com/login')
+
+# Insira o nome de usuário e senha
+driver.find_element_by_id('login').send_keys('gabriel.martinangelo@polijunior.com.br')
+driver.find_element_by_id('password').send_keys('GabrielPJ19*')
+
+# Clique no botão de login
+driver.find_element_by_css_selector('.btn-login').click()
+
+# Aguarde o carregamento da página após o login (você pode ajustar esse tempo de espera conforme necessário)
+driver.implicitly_wait(10)
+
+# Capture uma captura de tela da página
+screenshot_path = 'screenshot.png'
+driver.save_screenshot(screenshot_path)
+
+# Feche o navegador
+driver.quit()
+
+# Crie um arquivo HTML para exibir a captura de tela
+html_code = f'''
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Captura de Tela</title>
+</head>
+<body>
+    <h1>Captura de Tela do Pipedrive</h1>
+    <img src="{screenshot_path}" alt="Captura de Tela do Pipedrive">
+</body>
+</html>
