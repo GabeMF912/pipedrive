@@ -14,10 +14,13 @@
     <script>
         // Valores da meta e do valor atual (mensalmente)
         const metaAnual = 350000; // Meta anual do segundo semestre de 2023: R$ 350.000,00
-        const valorAtualMensal = [0, 20000, 45000, 80000, 125000, 175000, 250000]; // Valores atuais mensais (atualize conforme necessário)
+        const valorAtualMensal = [20000, 25000, 35000, 45000, 60000, 75000]; // Valores atuais mensais (atualize conforme necessário)
 
         // Nomes dos meses
         const meses = ['Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+        // Dividir a meta anual entre os meses
+        const metaMensal = metaAnual / valorAtualMensal.length;
 
         // Configuração do gráfico
         const ctx = document.getElementById('metaComercial').getContext('2d');
@@ -27,14 +30,14 @@
                 labels: meses,
                 datasets: [
                     {
-                        label: 'Meta Anual',
-                        data: Array(7).fill(metaAnual),
+                        label: 'Meta Mensal',
+                        data: Array(6).fill(metaMensal),
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 2,
                         fill: false
                     },
                     {
-                        label: 'Valor Atual',
+                        label: 'Valor Atual Mensal',
                         data: valorAtualMensal,
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 2,
