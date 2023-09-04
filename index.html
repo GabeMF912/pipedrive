@@ -136,21 +136,13 @@
         // Carrega a API do Google Sheets
         gapi.load('client', init);
 
-        // Função para buscar dados da API do Google Sheets
+        // Função para buscar dados da API do Google Sheets periodicamente
         function getDataPeriodically() {
             getDataFromGoogleSheets(); // Chama a função para buscar dados
-
-            // Atualiza o gráfico com os novos dados
-            const chart = Chart.getChart("metaComercial");
-            chart.data.datasets[1].data = valorAtualMensal;
-            chart.update();
-
-            // Chama a função novamente após 5 segundos segundo (milissegundos)
-            setTimeout(getDataPeriodically, 5*1000);
         }
         
-        // Chama a função inicialmente para iniciar o loop de atualização
-        getDataPeriodically();
+        // Configura um intervalo de atualização a cada um segundo (em milissegundos)
+        setInterval(getDataPeriodically, 1000); // 5 minutos
     </script>
 </body>
 </html>
