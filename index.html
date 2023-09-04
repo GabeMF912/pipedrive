@@ -15,8 +15,13 @@
 
     <script>
         // Configurações da API do Google Sheets
-        const SPREADSHEET_ID = '1tTwdpV7G8M7JIFLjdQihBvopMbZjW22W_WwkZRc3sZs'; // Sua ID de planilha
+        const SPREADSHEET_ID = '1q10XJcQ0zPYSom3XSMTj9lleC_lpQ92F6Qpsrqh4eWg'; // Sua ID de planilha
         const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk'; // Sua chave de API
+
+        // Valores da meta do primeiro trimestre, meta do segundo trimestre e valor atual (mensalmente)
+        const metaPrimeiroTrimestre = 200000;
+        const metaSegundoTrimestre = 150000;
+        const valorAtualMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
 
         // Nomes dos meses
         const meses = ['Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -43,8 +48,15 @@
                 // Extrair os valores de faturamento mensais da planilha
                 const faturamentoMensal = values.map((row) => parseInt(row[0]));
 
-                // Agora você pode usar a matriz faturamentoMensal em seu código para plotar no gráfico de linha
-                console.log(faturamentoMensal);
+                // Atualizar o valor atual mensal com os valores da planilha
+                valorAtualMensal.forEach((_, index) => {
+                    if (index < faturamentoMensal.length) {
+                        valorAtualMensal[index] = faturamentoMensal[index];
+                    }
+                });
+
+                // Agora você pode usar a matriz valorAtualMensal em seu código para plotar no gráfico de linha
+                console.log(valorAtualMensal);
 
                 // Configuração do gráfico
                 const ctx = document.getElementById('metaComercial').getContext('2d');
@@ -54,9 +66,23 @@
                         labels: meses,
                         datasets: [
                             {
-                                label: 'Faturamento Mensal',
-                                data: faturamentoMensal,
+                                label: 'Meta do Primeiro Trimestre',
+                                data: Array(6).fill(metaPrimeiroTrimestre / 3), // Divide a meta pelo número de meses do trimestre
                                 borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 2,
+                                fill: false
+                            },
+                            {
+                                label: 'Meta do Segundo Trimestre',
+                                data: Array(6).fill(metaSegundoTrimestre / 3), // Divide a meta pelo número de meses do trimestre
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 2,
+                                fill: false
+                            },
+                            {
+                                label: 'Situação Atual',
+                                data: valorAtualMensal,
+                                borderColor: 'rgba(0, 0, 255, 1)',
                                 borderWidth: 2,
                                 fill: false
                             }
@@ -77,6 +103,4 @@
         gapi.load('client', init);
 
     </script>
-    <script async defer src="https://apis.google.com/js/api.js"></script>
-</body>
-</html>
+    <script async defer src="https://apis.google.com/js/api
