@@ -7,9 +7,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
     <script src="https://apis.google.com/js/api.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent; /* Define o fundo da página como transparente */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Isso centralizará o conteúdo verticalmente */
+        }
+
+        #chart-container {
+            width: 80%;
+            background-color: rgba(255, 255, 255, 0.8); /* Adiciona um fundo semi-transparente ao contêiner do gráfico */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        canvas {
+            background-color: transparent; /* Garante que o fundo do gráfico seja transparente */
+        }
+    </style>
 </head>
 <body>
-    <div style="width: 80%; margin: 0 auto;">
+    <div id="chart-container">
         <canvas id="metaComercial"></canvas>
     </div>
 
@@ -85,14 +107,14 @@
                                 label: 'Linear de Faturamento',
                                 data: valorLinearMensal,
                                 borderColor: 'rgba(0, 78, 149, 1)',
-                                borderWidth: 2,
+                                borderWidth: 5,
                                 fill: true
                             },
                             {
                                 label: 'Faturamento Realizado',
                                 data: valorAtualMensal,
                                 borderColor: 'rgba(251, 170, 38, 1)',
-                                borderWidth: 2,
+                                borderWidth: 5,
                                 fill: true
                             }
                         ]
