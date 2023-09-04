@@ -92,45 +92,50 @@
                 valorAtualMensal.forEach((_, index) => {
                     valorAtualMensal[index] = faturamentoMensal[index];
                 });
-                
-                // Imprime a lista valorAtualMensal no console
-                console.log('Valor Atual Mensal:', valorAtualMensal);
 
                 // Calcula os valores da meta com base nas regras específicas
                 calculateMeta();
 
-                // Configuração do gráfico
-                const ctx = document.getElementById('metaComercial').getContext('2d');
-                const chart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: meses,
-                        datasets: [
-                            {
-                                label: 'Linear de Faturamento',
-                                data: valorLinearMensal,
-                                borderColor: 'rgba(0, 78, 149, 1)',
-                                borderWidth: 5,
-                                fill: true
-                            },
-                            {
-                                label: 'Faturamento Realizado',
-                                data: valorAtualMensal,
-                                borderColor: 'rgba(251, 170, 38, 1)',
-                                borderWidth: 5,
-                                fill: true
-                            }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                            }
-                        }
-                    }
-                });
+                // Atualiza o gráfico
+                updateChart();
             });
+        }
+
+        // Configuração inicial do gráfico
+        const ctx = document.getElementById('metaComercial').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: meses,
+                datasets: [
+                    {
+                        label: 'Linear de Faturamento',
+                        data: valorLinearMensal,
+                        borderColor: 'rgba(0, 78, 149, 1)',
+                        borderWidth: 5,
+                        fill: true
+                    },
+                    {
+                        label: 'Faturamento Realizado',
+                        data: valorAtualMensal,
+                        borderColor: 'rgba(251, 170, 38, 1)',
+                        borderWidth: 5,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    }
+                }
+            }
+        });
+
+        // Função para atualizar o gráfico
+        function updateChart() {
+            chart.update();
         }
 
         // Carrega a API do Google Sheets
@@ -139,11 +144,10 @@
         // Função para buscar dados da API do Google Sheets periodicamente
         function getDataPeriodically() {
             getDataFromGoogleSheets(); // Chama a função para buscar dados
-            setTimeout(getDataPeriodically, 5000); // Configura o próximo intervalo de atualização para 5 segundos
         }
 
-        // Inicializa a função de atualização periódica
-        getDataPeriodically();
+        // Configura um intervalo de atualização a cada 5 segundos (em milissegundos)
+        setInterval(getDataPeriodically, 5000);
     </script>
 </body>
 </html>
