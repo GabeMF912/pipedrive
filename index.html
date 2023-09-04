@@ -56,7 +56,7 @@
         function getDataFromGoogleSheets() {
             gapi.client.sheets.spreadsheets.values.get({
                 spreadsheetId: SPREADSHEET_ID,
-                range: "Planilha1!C2:C7" // Ajuste a faixa para corresponder às suas células na planilha
+                range: "C2:C7" // Ajuste a faixa para corresponder às suas células na planilha
             }).then((response) => {
                 const values = response.result.values;
 
@@ -81,14 +81,14 @@
                             {
                                 label: 'Linear de Faturamento',
                                 data: valorLinearMensal,
-                                borderColor: 'rgba(0, 0, 255, 1)',
+                                borderColor: 'rgba(0, 78, 149, 1)',
                                 borderWidth: 2,
                                 fill: true
                             },
                             {
                                 label: 'Faturamento Realizado',
-                                data: valorAtualMensal,
-                                borderColor: 'rgba(0, 0, 255, 1)',
+                                data: faturamentoMensal,
+                                borderColor: 'rgba(251, 170, 38, 1)',
                                 borderWidth: 2,
                                 fill: true
                             }
