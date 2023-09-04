@@ -12,16 +12,18 @@
             margin: 0;
             padding: 0;
             background-color: transparent;
+            height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start; /* Alinhar o conteúdo ao topo da página */
         }
 
         #chart-container {
-            width: 1000px; /* Define um tamanho fixo para o contêiner do gráfico */
+            position: absolute;
+            top: 20px; /* Espaço no topo */
+            width: 1000px;
             height: 400px; /* Define um tamanho fixo para o contêiner do gráfico */
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: #eeeeee);
             padding: 10px;
             border-radius: 10px;
         }
