@@ -44,10 +44,14 @@
                     // Primeiros três meses: Aumenta gradualmente para R$ 200.000
                     metaPrimeiroTrimestre[i] = (200000 / 3) * (i + 1);
                     metaSegundoTrimestre[i] = 0;
-                } else {
-                    // Restante do semestre: Continua aumentando de forma linear até R$ 350.000
+                } else if (i < 5) {
+                    // Próximos dois meses: Aumenta de R$ 200.000 para R$ 350.000
                     metaPrimeiroTrimestre[i] = 200000;
-                    metaSegundoTrimestre[i] = (350000 / 3) * (i - 2);
+                    metaSegundoTrimestre[i] = 200000 + (75000 * (i - 2));
+                } else {
+                    // Último mês: R$ 350.000
+                    metaPrimeiroTrimestre[i] = 200000;
+                    metaSegundoTrimestre[i] = 350000;
                 }
             }
         }
