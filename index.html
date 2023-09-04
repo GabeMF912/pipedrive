@@ -18,9 +18,7 @@
         const SPREADSHEET_ID = '1tTwdpV7G8M7JIFLjdQihBvopMbZjW22W_WwkZRc3sZs'; // Sua ID de planilha
         const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk'; // Sua chave de API
 
-        // Valores da meta do primeiro trimestre, meta do segundo trimestre e valor atual (mensalmente)
-        const metaPrimeiroTrimestre = [0, 0, 0, 0, 0, 0]; // Começa em zero
-        const metaSegundoTrimestre = [0, 0, 0, 0, 0, 0]; // Começa em zero
+        // Valor atual (mensalmente)
         const valorAtualMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
 
         // Nomes dos meses
@@ -42,16 +40,10 @@
             for (let i = 0; i < meses.length; i++) {
                 if (i < 3) {
                     // Primeiros três meses: Aumenta gradualmente para R$ 200.000
-                    metaPrimeiroTrimestre[i] = (200000 / 3) * (i + 1);
-                    metaSegundoTrimestre[i] = 0;
-                } else if (i < 5) {
-                    // Próximos dois meses: Aumenta de R$ 200.000 para R$ 350.000
-                    metaPrimeiroTrimestre[i] = 200000;
-                    metaSegundoTrimestre[i] = 200000 + (75000 * (i - 2));
+                    valorAtualMensal[i] = (200000 / 3) * (i + 1);
                 } else {
-                    // Último mês: R$ 350.000
-                    metaPrimeiroTrimestre[i] = 200000;
-                    metaSegundoTrimestre[i] = 350000;
+                    // Próximos três meses: Aumenta de R$ 200.000 para R$ 350.000
+                    valorAtualMensal[i] = 200000 + ((350000 - 200000) / 3) * (i - 2);
                 }
             }
         }
@@ -85,21 +77,7 @@
                         labels: meses,
                         datasets: [
                             {
-                                label: 'Meta do Primeiro Trimestre',
-                                data: metaPrimeiroTrimestre,
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 2,
-                                fill: false
-                            },
-                            {
-                                label: 'Meta do Segundo Trimestre',
-                                data: metaSegundoTrimestre,
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                borderWidth: 2,
-                                fill: false
-                            },
-                            {
-                                label: 'Situação Atual',
+                                label: 'Meta Comercial',
                                 data: valorAtualMensal,
                                 borderColor: 'rgba(0, 0, 255, 1)',
                                 borderWidth: 2,
