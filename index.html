@@ -93,6 +93,11 @@
                     valorAtualMensal[index] = faturamentoMensal[index];
                 });
 
+                // Atualiza os dados do gráfico com os novos valores
+                chart.data.datasets[1].data = valorAtualMensal;
+        
+                // Aplica as atualizações no gráfico
+                chart.update();
                 // Imprime a lista valorAtualMensal no console
                 console.log('Valor Atual Mensal:', valorAtualMensal);
 
