@@ -41,7 +41,11 @@
     <script>
         // Configurações da API do Google Sheets
         const SPREADSHEET_ID = '1tTwdpV7G8M7JIFLjdQihBvopMbZjW22W_WwkZRc3sZs'; // Sua ID de planilha
-        const API_KEY = 'SUA_CHAVE_DE_API'; // Sua chave de API
+        const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk'; // Sua chave de API
+
+        // Valor atual (mensalmente)
+        const valorAtualMensal = [0, 0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
+        const valorLinearMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
 
         // Nomes dos meses
         const meses = ['Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -57,16 +61,43 @@
             });
         }
 
+        // Calcula os valores da meta com base nas regras específicas
+        function calculateMeta() {
+            for (let i = 0; i < meses.length; i++) {
+                if (i === 0) {
+                    // Mês de Junho: Começa em 0
+                    valorLinearMensal[i] = 0;
+                } else if (i < 4) {
+                    // Primeiros três meses: Aumenta gradualmente para R$ 200.000
+                    valorLinearMensal[i] = (200000 / 3) * i;
+                } else {
+                    // Próximos três meses: Aumenta de R$ 200.000 para R$ 350.000
+                    valorLinearMensal[i] = 200000 + ((350000 - 200000) / 3) * (i - 3);
+                }
+            }
+        }
+
         // Obtém os dados da planilha do Google Sheets
         function getDataFromGoogleSheets() {
             gapi.client.sheets.spreadsheets.values.get({
                 spreadsheetId: SPREADSHEET_ID,
-                range: "C2:C8"
+                range: "C2:C8" // Ajuste a faixa para corresponder às suas células na planilha
             }).then((response) => {
                 const values = response.result.values;
 
                 // Extrair os valores de faturamento mensais da planilha
                 const faturamentoMensal = values.map((row) => parseFloat(row[0]));
+
+                // Atualizar o valor atual mensal com os valores da planilha
+                valorAtualMensal.forEach((_, index) => {
+                    valorAtualMensal[index] = faturamentoMensal[index];
+                });
+                
+                // Imprime a lista valorAtualMensal no console
+                console.log('Valor Atual Mensal:', valorAtualMensal);
+
+                // Calcula os valores da meta com base nas regras específicas
+                calculateMeta();
 
                 // Configuração do gráfico
                 const ctx = document.getElementById('metaComercial').getContext('2d');
@@ -77,14 +108,14 @@
                         datasets: [
                             {
                                 label: 'Linear de Faturamento',
-                                data: calcularMeta(faturamentoMensal),
+                                data: valorLinearMensal,
                                 borderColor: 'rgba(0, 78, 149, 1)',
                                 borderWidth: 5,
                                 fill: true
                             },
                             {
                                 label: 'Faturamento Realizado',
-                                data: faturamentoMensal,
+                                data: valorAtualMensal,
                                 borderColor: 'rgba(251, 170, 38, 1)',
                                 borderWidth: 5,
                                 fill: true
@@ -102,29 +133,16 @@
             });
         }
 
-        // Calcula os valores da meta com base nas regras específicas
-        function calcularMeta(faturamentoMensal) {
-            const valorLinearMensal = [];
-
-            for (let i = 0; i < meses.length; i++) {
-                if (i === 0) {
-                    // Mês de Junho: Começa em 0
-                    valorLinearMensal[i] = 0;
-                } else if (i < 4) {
-                    // Primeiros três meses: Aumenta gradualmente para R$ 200.000
-                    valorLinearMensal[i] = (200000 / 3) * i;
-                } else {
-                    // Próximos três meses: Aumenta de R$ 200.000 para R$ 350.000
-                    valorLinearMensal[i] = 200000 + ((350000 - 200000) / 3) * (i - 3);
-                }
-            }
-
-            return valorLinearMensal;
-        }
-
         // Carrega a API do Google Sheets
         gapi.load('client', init);
 
+        // Função para buscar dados da API do Google Sheets periodicamente
+        function getDataPeriodically() {
+            getDataFromGoogleSheets(); // Chama a função para buscar dados
+        }
+        
+        // Configura um intervalo de atualização a cada um segundo (em milissegundos)
+        setInterval(getDataPeriodically, 1000); // 5 minutos
     </script>
 </body>
 </html>
