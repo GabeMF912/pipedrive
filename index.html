@@ -92,12 +92,7 @@
                 valorAtualMensal.forEach((_, index) => {
                     valorAtualMensal[index] = faturamentoMensal[index];
                 });
-
-                // Atualiza os dados do gráfico com os novos valores
-                chart.data.datasets[1].data = valorAtualMensal;
-        
-                // Aplica as atualizações no gráfico
-                chart.update();
+                
                 // Imprime a lista valorAtualMensal no console
                 console.log('Valor Atual Mensal:', valorAtualMensal);
 
@@ -144,10 +139,18 @@
         // Função para buscar dados da API do Google Sheets
         function getDataPeriodically() {
             getDataFromGoogleSheets(); // Chama a função para buscar dados
+
+            // Atualiza o gráfico com os novos dados
+            const chart = Chart.getChart("metaComercial");
+            chart.data.datasets[1].data = valorAtualMensal;
+            chart.update();
+
+            // Chama a função novamente após 5 segundos segundo (milissegundos)
+            setTimeout(getDataPeriodically, 5*1000);
         }
         
-        // Configura um intervalo de atualização a cada 5 minutos (em milissegundos)
-        setInterval(getDataPeriodically, 1000); // 5 minutos
+        // Chama a função inicialmente para iniciar o loop de atualização
+        getDataPeriodically();
     </script>
 </body>
 </html>
