@@ -77,11 +77,43 @@
             }
         }
 
+        // Configuração inicial do gráfico
+        const ctx = document.getElementById('metaComercial').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: meses,
+                datasets: [
+                    {
+                        label: 'Linear de Faturamento',
+                        data: valorLinearMensal,
+                        borderColor: 'rgba(0, 78, 149, 1)',
+                        borderWidth: 5,
+                        fill: true
+                    },
+                    {
+                        label: 'Faturamento Realizado',
+                        data: valorAtualMensal,
+                        borderColor: 'rgba(251, 170, 38, 1)',
+                        borderWidth: 5,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    }
+                }
+            }
+        });
+
         // Obtém os dados da planilha do Google Sheets
         function getDataFromGoogleSheets() {
             gapi.client.sheets.spreadsheets.values.get({
                 spreadsheetId: SPREADSHEET_ID,
-                range: "C2:C8" // Ajuste a faixa para corresponder às suas células na planilha
+                range: "C2:C8"
             }).then((response) => {
                 const values = response.result.values;
 
@@ -92,57 +124,21 @@
                 valorAtualMensal.forEach((_, index) => {
                     valorAtualMensal[index] = faturamentoMensal[index];
                 });
-                
-                // Imprime a lista valorAtualMensal no console
-                console.log('Valor Atual Mensal:', valorAtualMensal);
 
-                // Calcula os valores da meta com base nas regras específicas
-                calculateMeta();
+                // Atualiza os dados do gráfico com os novos valores
+                chart.data.datasets[1].data = valorAtualMensal;
 
-                // Configuração do gráfico
-                const ctx = document.getElementById('metaComercial').getContext('2d');
-                const chart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: meses,
-                        datasets: [
-                            {
-                                label: 'Linear de Faturamento',
-                                data: valorLinearMensal,
-                                borderColor: 'rgba(0, 78, 149, 1)',
-                                borderWidth: 5,
-                                fill: true
-                            },
-                            {
-                                label: 'Faturamento Realizado',
-                                data: valorAtualMensal,
-                                borderColor: 'rgba(251, 170, 38, 1)',
-                                borderWidth: 5,
-                                fill: true
-                            }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                            }
-                        }
-                    }
-                });
+                // Aplica as atualizações no gráfico
+                chart.update();
+
+                // Chama a função novamente para buscar dados periodicamente
+                setTimeout(getDataFromGoogleSheets, 5 * 1000); // Chama a cada 5 minutos
             });
         }
 
-        // Carrega a API do Google Sheets
+        // Chama a função para obter os dados da planilha quando a página é carregada
         gapi.load('client', init);
 
-        // Função para buscar dados da API do Google Sheets periodicamente
-        function getDataPeriodically() {
-            getDataFromGoogleSheets(); // Chama a função para buscar dados
-        }
-        
-        // Configura um intervalo de atualização a cada um segundo (em milissegundos)
-        setInterval(getDataPeriodically, 1000); // 5 minutos
     </script>
 </body>
 </html>
