@@ -10,7 +10,8 @@
 </head>
 <body>
     <div style="width: 80%; margin: 0 auto;">
-        <canvas id="metaComercial"></canvas>
+        <canvas id="metaComercialLinear"></canvas>
+        <canvas id="metaComercialRealizado"></canvas>
     </div>
 
     <script>
@@ -71,9 +72,9 @@
                 // Calcula os valores da meta com base nas regras específicas
                 calculateMeta();
 
-                // Configuração do gráfico
-                const ctx = document.getElementById('metaComercial').getContext('2d');
-                const myChart = new Chart(ctx, {
+                // Configuração do gráfico da "Meta Linear"
+                const ctxLinear = document.getElementById('metaComercialLinear').getContext('2d');
+                const chartLinear = new Chart(ctxLinear, {
                     type: 'line',
                     data: {
                         labels: meses,
@@ -84,7 +85,25 @@
                                 borderColor: 'rgba(0, 78, 149, 1)',
                                 borderWidth: 2,
                                 fill: true
-                            },
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                // Configuração do gráfico do "Faturamento Realizado"
+                const ctxRealizado = document.getElementById('metaComercialRealizado').getContext('2d');
+                const chartRealizado = new Chart(ctxRealizado, {
+                    type: 'line',
+                    data: {
+                        labels: meses,
+                        datasets: [
                             {
                                 label: 'Faturamento Realizado',
                                 data: faturamentoMensal,
