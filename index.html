@@ -19,8 +19,8 @@
         const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk'; // Sua chave de API
 
         // Valores da meta do primeiro trimestre, meta do segundo trimestre e valor atual (mensalmente)
-        const metaPrimeiroTrimestre = 200000;
-        const metaSegundoTrimestre = 150000;
+        const metaPrimeiroTrimestre = [0, 0, 0, 0, 0, 0]; // Começa em zero e aumenta para R$ 200.000 nos três primeiros meses
+        const metaSegundoTrimestre = [200000, 200000, 200000, 350000, 350000, 350000]; // Aumenta para R$ 350.000 para o restante do semestre
         const valorAtualMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
 
         // Nomes dos meses
@@ -67,14 +67,14 @@
                         datasets: [
                             {
                                 label: 'Meta do Primeiro Trimestre',
-                                data: Array(6).fill(metaPrimeiroTrimestre / 3), // Divide a meta pelo número de meses do trimestre
+                                data: metaPrimeiroTrimestre,
                                 borderColor: 'rgba(75, 192, 192, 1)',
                                 borderWidth: 2,
                                 fill: false
                             },
                             {
                                 label: 'Meta do Segundo Trimestre',
-                                data: Array(6).fill(metaSegundoTrimestre / 3), // Divide a meta pelo número de meses do trimestre
+                                data: metaSegundoTrimestre,
                                 borderColor: 'rgba(255, 99, 132, 1)',
                                 borderWidth: 2,
                                 fill: false
@@ -103,4 +103,5 @@
         gapi.load('client', init);
 
     </script>
-    <script async defer src="https://apis.google.com/js/api
+</body>
+</html>
