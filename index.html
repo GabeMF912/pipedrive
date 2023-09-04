@@ -20,9 +20,8 @@
         const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk'; // Sua chave de API
 
         // Valor atual (mensalmente)
-        const valorAtualMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
+        const valorAtualMensal = [0, 0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
         const valorLinearMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero]
-        const valorAtual = [0, 49042.5, 93717.5, 93717.5, 93717.5, 93717.5];
 
         // Nomes dos meses
         const meses = ['Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -60,12 +59,12 @@
         function getDataFromGoogleSheets() {
             gapi.client.sheets.spreadsheets.values.get({
                 spreadsheetId: SPREADSHEET_ID,
-                range: "C2:C7" // Ajuste a faixa para corresponder às suas células na planilha
+                range: "C2:C8" // Ajuste a faixa para corresponder às suas células na planilha
             }).then((response) => {
                 const values = response.result.values;
         
                 // Extrair os valores de faturamento mensais da planilha
-                const faturamentoMensal = values.map((row) => parseInt(row[0]));
+                const faturamentoMensal = values.map((row) => parseFloat(row[0]));
         
                 // Atualizar o valor atual mensal com os valores da planilha
                 valorAtualMensal.forEach((_, index) => {
