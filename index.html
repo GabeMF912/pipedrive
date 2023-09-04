@@ -20,6 +20,7 @@
 
         // Valor atual (mensalmente)
         const valorAtualMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
+        const valorLinearMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
 
         // Nomes dos meses
         const meses = ['Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -40,13 +41,13 @@
             for (let i = 0; i < meses.length; i++) {
                 if (i === 0) {
                     // Mês de Junho: Começa em 0
-                    valorAtualMensal[i] = 0;
+                    valorLinearMensal[i] = 0;
                 } else if (i < 4) {
                     // Primeiros três meses: Aumenta gradualmente para R$ 200.000
-                    valorAtualMensal[i] = (200000 / 3) * i;
+                    valorLinearMensal[i] = (200000 / 3) * i;
                 } else {
                     // Próximos três meses: Aumenta de R$ 200.000 para R$ 350.000
-                    valorAtualMensal[i] = 200000 + ((350000 - 200000) / 3) * (i - 3);
+                    valorLinearMensal[i] = 200000 + ((350000 - 200000) / 3) * (i - 3);
                 }
             }
         }
@@ -81,7 +82,7 @@
                         datasets: [
                             {
                                 label: 'Meta Linear',
-                                data: valorAtualMensal,
+                                data: valorLinearMensal,
                                 borderColor: 'rgba(0, 0, 255, 1)',
                                 borderWidth: 2,
                                 fill: false
