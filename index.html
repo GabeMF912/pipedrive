@@ -139,10 +139,11 @@
         // Função para buscar dados da API do Google Sheets periodicamente
         function getDataPeriodically() {
             getDataFromGoogleSheets(); // Chama a função para buscar dados
+            setTimeout(getDataPeriodically, 5000); // Configura o próximo intervalo de atualização para 5 segundos
         }
-        
-        // Configura um intervalo de atualização a cada um segundo (em milissegundos)
-        setInterval(getDataPeriodically, 1000); // 5 minutos
+
+        // Inicializa a função de atualização periódica
+        getDataPeriodically();
     </script>
 </body>
 </html>
