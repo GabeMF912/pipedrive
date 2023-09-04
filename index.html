@@ -136,6 +136,13 @@
         // Carrega a API do Google Sheets
         gapi.load('client', init);
 
+        // Função para buscar dados da API do Google Sheets
+        function getDataPeriodically() {
+            getDataFromGoogleSheets(); // Chama a função para buscar dados
+        }
+        
+        // Configura um intervalo de atualização a cada 5 minutos (em milissegundos)
+        setInterval(getDataPeriodically, 60 * 1000); // 5 minutos
     </script>
 </body>
 </html>
