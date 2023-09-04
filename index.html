@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meta Comercial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body>
     <div style="width: 80%; margin: 0 auto;">
@@ -12,50 +14,89 @@
     </div>
 
     <script>
+        // Configurações da API do Google Sheets
+        const SPREADSHEET_ID = '1q10XJcQ0zPYSom3XSMTj9lleC_lpQ92F6Qpsrqh4eWg'; // Sua ID de planilha
+        const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk'; // Sua chave de API
+
         // Valores da meta e do valor atual (mensalmente)
-        const metaAnual = 350000; // Meta anual do segundo semestre de 2023: R$ 350.000,00
         const valorAtualMensal = [20000, 25000, 35000, 45000, 60000, 75000]; // Valores atuais mensais (atualize conforme necessário)
 
+        // Metas trimestrais
+        const metaPrimeiroTrimestre = 200000;
+        const metaSegundoTrimestre = 150000;
+
         // Nomes dos meses
-        const meses = ['Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'];
 
-        // Dividir a meta anual entre os meses
-        const metaMensalIncremental = metaAnual / valorAtualMensal.length;
+        // Inicializa a API do Google Sheets
+        function init() {
+            gapi.client.init({
+                apiKey: API_KEY,
+                discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
+            }).then(() => {
+                // Chame a função para obter os dados da planilha
+                getDataFromGoogleSheets();
+            });
+        }
 
-        // Calcular valores crescentes da meta mensal
-        const metaMensal = Array(valorAtualMensal.length).fill(0).map((_, index) => metaMensalIncremental * (index + 1));
+        // Obtém os dados da planilha do Google Sheets
+        function getDataFromGoogleSheets() {
+            gapi.client.sheets.spreadsheets.values.get({
+                spreadsheetId: SPREADSHEET_ID,
+                range: "A2:A7" // Ajuste a faixa para corresponder aos seus dados na planilha
+            }).then((response) => {
+                const values = response.result.values;
 
-        // Configuração do gráfico
-        const ctx = document.getElementById('metaComercial').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: meses,
-                datasets: [
-                    {
-                        label: 'Linear',
-                        data: metaMensal,
-                        borderColor: 'rgba(0, 78, 149, 1)',
-                        borderWidth: 1,
-                        fill: true
+                // Extrair os valores de vendas mensais da planilha
+                const vendasMensais = values.map((row) => parseInt(row[0]));
+
+                // Agora você pode usar a matriz vendasMensais em seu código para plotar no gráfico de linha
+                console.log(vendasMensais);
+
+                // Configuração do gráfico
+                const ctx = document.getElementById('metaComercial').getContext('2d');
+                const myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: meses,
+                        datasets: [
+                            {
+                                label: 'Meta Mensal',
+                                data: Array(6).fill(0).map((_, index) => {
+                                    if (index < 3) {
+                                        return metaPrimeiroTrimestre / 3; // Primeiro trimestre
+                                    } else {
+                                        return metaSegundoTrimestre / 3; // Segundo trimestre
+                                    }
+                                }),
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 2,
+                                fill: false
+                            },
+                            {
+                                label: 'Valor Atual Mensal',
+                                data: valorAtualMensal,
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 2,
+                                fill: false
+                            }
+                        ]
                     },
-                    {
-                        label: 'Realizado',
-                        data: valorAtualMensal,
-                        borderColor: 'rgba(251, 170, 38, 1)',
-                        borderWidth: 2,
-                        fill: true
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
                     }
-                ]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+                });
+            });
+        }
+
+        // Carrega a API do Google Sheets
+        gapi.load('client', init);
+
     </script>
+    <script async defer src="https://apis.google.com/js/api.js"></script>
 </body>
 </html>
