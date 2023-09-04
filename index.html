@@ -41,11 +41,7 @@
     <script>
         // Configurações da API do Google Sheets
         const SPREADSHEET_ID = '1tTwdpV7G8M7JIFLjdQihBvopMbZjW22W_WwkZRc3sZs'; // Sua ID de planilha
-        const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk'; // Sua chave de API
-
-        // Valor atual (mensalmente)
-        const valorAtualMensal = [0, 0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
-        const valorLinearMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
+        const API_KEY = 'SUA_CHAVE_DE_API'; // Sua chave de API
 
         // Nomes dos meses
         const meses = ['Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -57,50 +53,13 @@
                 discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
             }).then(() => {
                 // Chame a função para obter os dados da planilha
-                getDataFromGoogleSheets().then(() => {
-                    // Inicializa o gráfico após obter os dados da planilha
-                    initChart();
-                });
-            });
-        }
-
-        // Inicializa o gráfico
-        function initChart() {
-            const ctx = document.getElementById('metaComercial').getContext('2d');
-            const chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: meses,
-                    datasets: [
-                        {
-                            label: 'Linear de Faturamento',
-                            data: valorLinearMensal,
-                            borderColor: 'rgba(0, 78, 149, 1)',
-                            borderWidth: 5,
-                            fill: true
-                        },
-                        {
-                            label: 'Faturamento Realizado',
-                            data: valorAtualMensal,
-                            borderColor: 'rgba(251, 170, 38, 1)',
-                            borderWidth: 5,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                        }
-                    }
-                }
+                getDataFromGoogleSheets();
             });
         }
 
         // Obtém os dados da planilha do Google Sheets
         function getDataFromGoogleSheets() {
-            return gapi.client.sheets.spreadsheets.values.get({
+            gapi.client.sheets.spreadsheets.values.get({
                 spreadsheetId: SPREADSHEET_ID,
                 range: "C2:C8"
             }).then((response) => {
@@ -109,20 +68,61 @@
                 // Extrair os valores de faturamento mensais da planilha
                 const faturamentoMensal = values.map((row) => parseFloat(row[0]));
 
-                // Atualizar o valor atual mensal com os valores da planilha
-                valorAtualMensal.forEach((_, index) => {
-                    valorAtualMensal[index] = faturamentoMensal[index];
+                // Configuração do gráfico
+                const ctx = document.getElementById('metaComercial').getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: meses,
+                        datasets: [
+                            {
+                                label: 'Linear de Faturamento',
+                                data: calcularMeta(faturamentoMensal),
+                                borderColor: 'rgba(0, 78, 149, 1)',
+                                borderWidth: 5,
+                                fill: true
+                            },
+                            {
+                                label: 'Faturamento Realizado',
+                                data: faturamentoMensal,
+                                borderColor: 'rgba(251, 170, 38, 1)',
+                                borderWidth: 5,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                            }
+                        }
+                    }
                 });
-
-                // Atualiza os dados do gráfico com os novos valores
-                chart.data.datasets[1].data = valorAtualMensal;
-
-                // Aplica as atualizações no gráfico
-                chart.update();
             });
         }
 
-        // Chama a função para obter os dados da planilha quando a página é carregada
+        // Calcula os valores da meta com base nas regras específicas
+        function calcularMeta(faturamentoMensal) {
+            const valorLinearMensal = [];
+
+            for (let i = 0; i < meses.length; i++) {
+                if (i === 0) {
+                    // Mês de Junho: Começa em 0
+                    valorLinearMensal[i] = 0;
+                } else if (i < 4) {
+                    // Primeiros três meses: Aumenta gradualmente para R$ 200.000
+                    valorLinearMensal[i] = (200000 / 3) * i;
+                } else {
+                    // Próximos três meses: Aumenta de R$ 200.000 para R$ 350.000
+                    valorLinearMensal[i] = 200000 + ((350000 - 200000) / 3) * (i - 3);
+                }
+            }
+
+            return valorLinearMensal;
+        }
+
+        // Carrega a API do Google Sheets
         gapi.load('client', init);
 
     </script>
