@@ -22,7 +22,7 @@
         const valorAtualMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
 
         // Nomes dos meses
-        const meses = ['Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        const meses = ['Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
         // Inicializa a API do Google Sheets
         function init() {
@@ -38,12 +38,15 @@
         // Calcula os valores da meta com base nas regras específicas
         function calculateMeta() {
             for (let i = 0; i < meses.length; i++) {
-                if (i < 3) {
+                if (i === 0) {
+                    // Mês de Junho: Começa em 0
+                    valorAtualMensal[i] = 0;
+                } else if (i < 4) {
                     // Primeiros três meses: Aumenta gradualmente para R$ 200.000
-                    valorAtualMensal[i] = (200000 / 3) * (i + 1);
+                    valorAtualMensal[i] = (200000 / 3) * i;
                 } else {
                     // Próximos três meses: Aumenta de R$ 200.000 para R$ 350.000
-                    valorAtualMensal[i] = 200000 + ((350000 - 200000) / 3) * (i - 2);
+                    valorAtualMensal[i] = 200000 + ((350000 - 200000) / 3) * (i - 3);
                 }
             }
         }
