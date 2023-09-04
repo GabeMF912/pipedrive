@@ -20,7 +20,7 @@
         const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk'; // Sua chave de API
 
         // Valor atual (mensalmente)
-        const valorAtualMensal = [49042.50 ,  93717.50, 93717.50, 93717.50, 93717.50, 93717.50]; // Inicialmente, todos os valores são zero
+        const faturamentoMensal = [0, 49042.50 ,  93717.50, 93717.50, 93717.50, 93717.50, 93717.50]; // Inicialmente, todos os valores são zero
         const valorLinearMensal = [0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
 
         // Nomes dos meses
@@ -106,7 +106,7 @@
                         datasets: [
                             {
                                 label: 'Faturamento Realizado',
-                                data: valorAtualMensal,
+                                data: faturamentoMensal,
                                 borderColor: 'rgba(251, 170, 38, 1)',
                                 borderWidth: 2,
                                 fill: true
