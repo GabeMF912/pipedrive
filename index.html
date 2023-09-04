@@ -18,15 +18,8 @@
         const SPREADSHEET_ID = '1q10XJcQ0zPYSom3XSMTj9lleC_lpQ92F6Qpsrqh4eWg'; // Sua ID de planilha
         const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk'; // Sua chave de API
 
-        // Valores da meta e do valor atual (mensalmente)
-        const valorAtualMensal = [20000, 25000, 35000, 45000, 60000, 75000]; // Valores atuais mensais (atualize conforme necessário)
-
-        // Metas trimestrais
-        const metaPrimeiroTrimestre = 200000;
-        const metaSegundoTrimestre = 150000;
-
         // Nomes dos meses
-        const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'];
+        const meses = ['Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
         // Inicializa a API do Google Sheets
         function init() {
@@ -43,15 +36,15 @@
         function getDataFromGoogleSheets() {
             gapi.client.sheets.spreadsheets.values.get({
                 spreadsheetId: SPREADSHEET_ID,
-                range: "A2:A7" // Ajuste a faixa para corresponder aos seus dados na planilha
+                range: "Planilha1!C2:C7" // Ajuste a faixa para corresponder às suas células na planilha
             }).then((response) => {
                 const values = response.result.values;
 
-                // Extrair os valores de vendas mensais da planilha
-                const vendasMensais = values.map((row) => parseInt(row[0]));
+                // Extrair os valores de faturamento mensais da planilha
+                const faturamentoMensal = values.map((row) => parseInt(row[0]));
 
-                // Agora você pode usar a matriz vendasMensais em seu código para plotar no gráfico de linha
-                console.log(vendasMensais);
+                // Agora você pode usar a matriz faturamentoMensal em seu código para plotar no gráfico de linha
+                console.log(faturamentoMensal);
 
                 // Configuração do gráfico
                 const ctx = document.getElementById('metaComercial').getContext('2d');
@@ -61,22 +54,9 @@
                         labels: meses,
                         datasets: [
                             {
-                                label: 'Meta Mensal',
-                                data: Array(6).fill(0).map((_, index) => {
-                                    if (index < 3) {
-                                        return metaPrimeiroTrimestre / 3; // Primeiro trimestre
-                                    } else {
-                                        return metaSegundoTrimestre / 3; // Segundo trimestre
-                                    }
-                                }),
+                                label: 'Faturamento Mensal',
+                                data: faturamentoMensal,
                                 borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 2,
-                                fill: false
-                            },
-                            {
-                                label: 'Valor Atual Mensal',
-                                data: valorAtualMensal,
-                                borderColor: 'rgba(255, 99, 132, 1)',
                                 borderWidth: 2,
                                 fill: false
                             }
