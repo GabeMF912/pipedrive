@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meta Comercial</title>
+    <title>Leitura de Valor Numérico e Geração de Gráfico</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
     <script src="https://apis.google.com/js/api.js"></script>
@@ -26,18 +26,41 @@
             background-color: #eeeeee;
             padding: 10px;
             border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Alinhar conteúdo ao centro horizontalmente */
         }
 
         canvas {
             background-color: transparent;
+        }
+
+        /* Estilo para o container minimalista */
+        #container {
+            background-color: #eeeeee; /* Cor de fundo cinza claro */
+            border-radius: 10px; /* Bordas arredondadas */
+            padding: 10px; /* Espaçamento interno */
+            display: inline-block; /* Para que o tamanho do container seja ajustado automaticamente ao conteúdo */
+            position: absolute;
+            top: 41px; /* Cola na parte superior da área do gráfico */
+            left: 325px; /* Alinha horizontalmente ao centro do gráfico */
+            transform: translateX(-50%); /* Centraliza horizontalmente */
+            z-index: 1; /* Coloca o container acima do gráfico */
+            border: 3px solid #004e95; /* Adiciona um contorno ao redor do container */
+            font-family: "Montserrat", sans-serif; /* Altera a fonte do texto dentro do container */
+            color: #183059;
+            font-size: 1.5em;
         }
     </style>
 </head>
 <body>
     <div id="chart-container">
         <canvas id="metaComercial"></canvas>
-    </div>
 
+        <!-- Container minimalista para exibir o valor -->
+        <div id="container"></div>
+    </div>
+  
     <script>
         // Configurações da API do Google Sheets
         const SPREADSHEET_ID = '1q10XJcQ0zPYSom3XSMTj9lleC_lpQ92F6Qpsrqh4eWg'; // Sua ID de planilha
@@ -98,6 +121,9 @@
 
                 // Atualiza o gráfico
                 updateChart();
+
+                // Atualiza o valor no container
+                updateContainer();
             });
         }
 
@@ -137,6 +163,38 @@
         function updateChart() {
             chart.update();
         }
+
+        // Função para buscar o valor da célula e atualizar o container
+        function updateContainer() {
+            gapi.client.sheets.spreadsheets.values.get({
+                spreadsheetId: SPREADSHEET_ID,
+                range: 'Planilha1!C8' // Especifica a aba "Planilha1" e a célula C8
+            }).then(function(response) {
+                var valorDaCelula = response.result.values[0][0]; // Obtém o valor da célula
+
+                // Obtém o elemento do container pelo ID
+                var container = document.getElementById('container');
+
+                // Define o valor da célula como conteúdo do container
+                container.textContent = valorDaCelula;
+            });
+        }
+      
+        function updateContainer() {
+            gapi.client.sheets.spreadsheets.values.get({
+                spreadsheetId: SPREADSHEET_ID,
+                range: 'Planilha1!C8' // Especifica a aba "Planilha1" e a célula C8
+            }).then(function(response) {
+                var valorDaCelula = response.result.values[0][0]; // Obtém o valor da célula
+
+                // Obtém o elemento do container pelo ID
+                var container = document.getElementById('container');
+
+                // Define o valor da célula com 'R$' antes como conteúdo do container
+                container.textContent = 'R$ ' + valorDaCelula;
+            });
+        }
+
 
         // Carrega a API do Google Sheets
         gapi.load('client', init);
