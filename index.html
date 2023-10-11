@@ -15,12 +15,12 @@
             height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: flex-start; /* Alinhar o conteúdo ao topo da página */
         }
 
         #chart-container {
             position: absolute;
-            top: 20px;
+            top: 20px; /* Espaço no topo */
             height: 300px;
             width: 600px;
             background-color: #eeeeee;
@@ -28,25 +28,26 @@
             border-radius: 10px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: center; /* Alinhar conteúdo ao centro horizontalmente */
         }
 
         canvas {
             background-color: transparent;
         }
 
+        /* Estilo para o container minimalista */
         #container {
-            background-color: #eeeeee;
-            border-radius: 10px;
-            padding: 10px;
-            display: inline-block;
+            background-color: #eeeeee; /* Cor de fundo cinza claro */
+            border-radius: 10px; /* Bordas arredondadas */
+            padding: 10px; /* Espaçamento interno */
+            display: inline-block; /* Para que o tamanho do container seja ajustado automaticamente ao conteúdo */
             position: absolute;
-            top: 41px;
-            left: 155px;
-            transform: translateX(-50%);
-            z-index: 1;
-            border: 3px solid #004e95;
-            font-family: "Montserrat", sans-serif;
+            top: 41px; /* Cola na parte superior da área do gráfico */
+            left: 155px; /* Alinha horizontalmente ao centro do gráfico */
+            transform: translateX(-50%); /* Centraliza horizontalmente */
+            z-index: 1; /* Coloca o container acima do gráfico */
+            border: 3px solid #004e95; /* Adiciona um contorno ao redor do container */
+            font-family: "Montserrat", sans-serif; /* Altera a fonte do texto dentro do container */
             color: #183059;
             font-size: 1.5em;
         }
@@ -55,66 +56,81 @@
 <body>
     <div id="chart-container">
         <canvas id="metaComercial"></canvas>
+
+        <!-- Container minimalista para exibir o valor -->
         <div id="container"></div>
     </div>
   
     <script>
-        const SPREADSHEET_ID = '1q10XJcQ0zPYSom3XSMTj9lleC_lpQ92F6Qpsrqh4eWg';
-        const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk';
+        // Configurações da API do Google Sheets
+        const SPREADSHEET_ID = '1q10XJcQ0zPYSom3XSMTj9lleC_lpQ92F6Qpsrqh4eWg'; // Sua ID de planilha
+        const API_KEY = 'AIzaSyDXxy5eAzOaeVNojHpAHiX3l5jpSAY03Nk'; // Sua chave de API
 
-        const valorAtualMensal = [0, 0, 0, 0, 0, 0, 0];
-        let valorLinearMensal = [0, 0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
+        // Valor atual (mensalmente)
+        const valorAtualMensal = [0, 0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
+        const valorLinearMensal = [0, 0, 0, 0, 0, 0, 0]; // Inicialmente, todos os valores são zero
 
+        // Nomes dos meses
         const meses = ['Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
+        // Inicializa a API do Google Sheets
         function init() {
             gapi.client.init({
                 apiKey: API_KEY,
                 discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
             }).then(() => {
+                // Chame a função para obter os dados da planilha
                 getDataFromGoogleSheets();
-                updateLinearValues();
             });
         }
 
-        // Função para buscar os valores da série linear a partir da planilha
-        function updateLinearValues() {
-    gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: SPREADSHEET_ID,
-        range: 'Planilha1!B2:B8' // Altere a faixa para corresponder às suas células
-    }).then(function(response) {
-        const linearValues = response.result.values;
-
-        if (linearValues && linearValues.length > 0) {
-            valorLinearMensal = linearValues.map((row) => parseFloat(row[0]));
-
-            // Após atualizar os valores da série linear, atualize o gráfico
-            updateChart();
+        // Calcula os valores da meta com base nas regras específicas
+        
+        function calculateMeta() { 
+          gapi.client.sheets.spreadsheets.values.get({
+                  spreadsheetId: SPREADSHEET_ID,
+                  range: "B2:B8" // Ajuste a faixa para corresponder às suas células na planilha
+              }).then((response) => {
+                  const linearvalues = response.result.values;
+  
+                  // Extrair os valores de faturamento mensais da planilha
+                  const linearMensal = linearvalues.map((row) => parseFloat(row[0]));
+  
+                  // Atualizar o valor atual mensal com os valores da planilha
+                  valorLinearMensal.forEach((_, index) => {
+                      valorLinearMensal[index] = linearMensal[index];
+                  });
+              });
         }
-    });
-}
-
-        // Função para buscar os dados da planilha
+            
+        // Obtém os dados da planilha do Google Sheets
         function getDataFromGoogleSheets() {
             gapi.client.sheets.spreadsheets.values.get({
                 spreadsheetId: SPREADSHEET_ID,
-                range: "C2:C8"
+                range: "C2:C8" // Ajuste a faixa para corresponder às suas células na planilha
             }).then((response) => {
                 const values = response.result.values;
 
+                // Extrair os valores de faturamento mensais da planilha
                 const faturamentoMensal = values.map((row) => parseFloat(row[0]));
 
+                // Atualizar o valor atual mensal com os valores da planilha
                 valorAtualMensal.forEach((_, index) => {
                     valorAtualMensal[index] = faturamentoMensal[index];
                 });
 
-                // Após buscar os valores da planilha, atualize os valores da série linear
-                updateLinearValues();
+                // Calcula os valores da meta com base nas regras específicas
+                calculateMeta();
 
+                // Atualiza o gráfico
+                updateChart();
+
+                // Atualiza o valor no container
                 updateContainer();
             });
         }
 
+        // Configuração inicial do gráfico
         const ctx = document.getElementById('metaComercial').getContext('2d');
         const chart = new Chart(ctx, {
             type: 'line',
@@ -146,28 +162,52 @@
             }
         });
 
+        // Função para atualizar o gráfico
         function updateChart() {
             chart.update();
         }
 
+        // Função para buscar o valor da célula e atualizar o container
         function updateContainer() {
             gapi.client.sheets.spreadsheets.values.get({
                 spreadsheetId: SPREADSHEET_ID,
-                range: 'Planilha1!C8'
+                range: 'Planilha1!C8' // Especifica a aba "Planilha1" e a célula C8
             }).then(function(response) {
-                var valorDaCelula = response.result.values[0][0];
+                var valorDaCelula = response.result.values[0][0]; // Obtém o valor da célula
+
+                // Obtém o elemento do container pelo ID
                 var container = document.getElementById('container');
+
+                // Define o valor da célula como conteúdo do container
+                container.textContent = valorDaCelula;
+            });
+        }
+      
+        function updateContainer() {
+            gapi.client.sheets.spreadsheets.values.get({
+                spreadsheetId: SPREADSHEET_ID,
+                range: 'Planilha1!C8' // Especifica a aba "Planilha1" e a célula C8
+            }).then(function(response) {
+                var valorDaCelula = response.result.values[0][0]; // Obtém o valor da célula
+
+                // Obtém o elemento do container pelo ID
+                var container = document.getElementById('container');
+
+                // Define o valor da célula com 'R$' antes como conteúdo do container
                 container.textContent = 'R$ ' + valorDaCelula;
             });
         }
 
+
+        // Carrega a API do Google Sheets
         gapi.load('client', init);
 
+        // Função para buscar dados da API do Google Sheets periodicamente
         function getDataPeriodically() {
-            getDataFromGoogleSheets();
-            updateLinearValues();
+            getDataFromGoogleSheets(); // Chama a função para buscar dados
         }
 
+        // Configura um intervalo de atualização a cada 5 segundos (em milissegundos)
         setInterval(getDataPeriodically, 5000);
     </script>
 </body>
